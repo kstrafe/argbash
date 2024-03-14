@@ -33,6 +33,7 @@ begins_with_short_option()
 _positionals=()
 _arg_directory=('' )
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_optionals=()
 _arg_glob="*"
 _arg_unit="b"
 _arg_verbose="off"
@@ -59,27 +60,33 @@ parse_commandline()
       --glob)
         test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
         _arg_glob="$2"
+        _optionals+=(_arg_glob)
         shift
         ;;
       --glob=*)
         _arg_glob="${_key##--glob=}"
+        _optionals+=(_arg_glob)
         ;;
       -u|--unit)
         test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
         _arg_unit="$2"
+        _optionals+=(_arg_unit)
         _args_simple_parsing_opt+=("${_key}" "$2")
         shift
         ;;
       --unit=*)
         _arg_unit="${_key##--unit=}"
+        _optionals+=(_arg_unit)
         _args_simple_parsing_opt+=("$_key")
         ;;
       -u*)
         _arg_unit="${_key##-u}"
+        _optionals+=(_arg_unit)
         _args_simple_parsing_opt+=("$_key")
         ;;
       --no-verbose|--verbose)
         _arg_verbose="on"
+        _optionals+=(_arg_verbose)
         _args_simple_parsing_opt+=("${_key}")
         test "${1:0:5}" = "--no-" && _arg_verbose="off"
         ;;

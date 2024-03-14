@@ -56,6 +56,7 @@ begins_with_short_option()
 _positionals=()
 _arg_output="-"
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_optionals=()
 _arg_separate=0
 _arg_hints="off"
 _arg_pos=()
@@ -91,9 +92,11 @@ parse_commandline()
 		case "$_key" in
 			-s|--separate)
 				_arg_separate=$((_arg_separate + 1))
+				_optionals+=(_arg_separate)
 				;;
 			-s*)
 				_arg_separate=$((_arg_separate + 1))
+				_optionals+=(_arg_separate)
 				_next="${_key##-s}"
 				if test -n "$_next" -a "$_next" != "$_key"
 				then
@@ -102,50 +105,62 @@ parse_commandline()
 				;;
 			--no-hints|--hints)
 				_arg_hints="on"
+				_optionals+=(_arg_hints)
 				test "${1:0:5}" = "--no-" && _arg_hints="off"
 				;;
 			--pos)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_pos+=("$2")
+				_optionals+=(_arg_pos)
 				shift
 				;;
 			--pos=*)
 				_arg_pos+=("${_key##--pos=}")
+				_optionals+=(_arg_pos)
 				;;
 			--opt)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_opt+=("$2")
+				_optionals+=(_arg_opt)
 				shift
 				;;
 			--opt=*)
 				_arg_opt+=("${_key##--opt=}")
+				_optionals+=(_arg_opt)
 				;;
 			--opt-bool)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_opt_bool+=("$2")
+				_optionals+=(_arg_opt_bool)
 				shift
 				;;
 			--opt-bool=*)
 				_arg_opt_bool+=("${_key##--opt-bool=}")
+				_optionals+=(_arg_opt_bool)
 				;;
 			--wrap)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_wrap+=("$2")
+				_optionals+=(_arg_wrap)
 				shift
 				;;
 			--wrap=*)
 				_arg_wrap+=("${_key##--wrap=}")
+				_optionals+=(_arg_wrap)
 				;;
 			-m|--mode)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_mode="$(mode "$2" "mode")" || exit 1
+				_optionals+=(_arg_mode)
 				shift
 				;;
 			--mode=*)
 				_arg_mode="$(mode "${_key##--mode=}" "mode")" || exit 1
+				_optionals+=(_arg_mode)
 				;;
 			-m*)
 				_arg_mode="$(mode "${_key##-m}" "mode")" || exit 1
+				_optionals+=(_arg_mode)
 				;;
 			-v|--version)
 				echo "argbash-init v$version"

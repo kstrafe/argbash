@@ -32,6 +32,7 @@ begins_with_short_option()
 # THE DEFAULTS INITIALIZATION - POSITIONALS
 _positionals=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_optionals=()
 _arg_unit="b"
 _arg_verbose="off"
 
@@ -56,13 +57,16 @@ parse_commandline()
       -u|--unit)
         test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
         _arg_unit="$2"
+        _optionals+=(_arg_unit)
         shift
         ;;
       --unit=*)
         _arg_unit="${_key##--unit=}"
+        _optionals+=(_arg_unit)
         ;;
       -u*)
         _arg_unit="${_key##-u}"
+        _optionals+=(_arg_unit)
         ;;
       -v|--version)
         echo $0 v0.1
@@ -74,6 +78,7 @@ parse_commandline()
         ;;
       --no-verbose|--verbose)
         _arg_verbose="on"
+        _optionals+=(_arg_verbose)
         test "${1:0:5}" = "--no-" && _arg_verbose="off"
         ;;
       -h|--help)

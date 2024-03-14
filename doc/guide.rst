@@ -691,6 +691,9 @@ The argument name is transliterated like this:
   If (a boolean argument) ``--quiet`` is passed, value of ``_arg_quiet`` is set to ``on``.
   Conversely, if ``--no-quiet`` is passed, value of ``_arg_quiet`` is set to ``off``.
 
+* Provided optional arguments are added into ``_optionals``.
+  You can check if an argument is provided via ``[[ ${_optionals[@]} =~ _arg_quiet ]]``.
+
 * Repeated arguments collect values to a `bash array <https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html>`_.
 
 * Incremental arguments have a default value (0 by default) and their value in the script corresponds to the default plus the number of times the argument was specified.

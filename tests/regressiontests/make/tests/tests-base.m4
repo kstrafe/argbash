@@ -146,6 +146,15 @@ ADD_TEST_BASH([test-simple], [test_simple_body
 	$< pos -o 'uf ta' | grep -q 'OPT_S=uf ta,POS_S=pos,'
 ])
 
+ADD_TEST_BASH([test-simple], [test_simple_body
+	$< pos -o 'uf ta' --print-optionals | grep -q 'OPT_S=uf ta,POS_S=pos,_optionals=_arg_prefix _arg_print_optionals'
+])
+
+ADD_TEST_BASH([test-simple], [test_simple_body
+	$< pos -o 'uf ta' --la x --print-optionals
+	$< pos -o 'uf ta' --la x --print-optionals | grep -q 'OPT_S=uf ta,POS_S=pos,LA=x,_optionals=_arg_prefix _arg_la _arg_print_optionals'
+])
+
 ADD_TEST_DASH([test-simple], [test_simple_body
 	ERROR="got 3" $(REVERSE) $< -- -o 'uf ta' pos
 	ERROR="got 3" $(REVERSE) $< pos -o 'uf ta'

@@ -373,6 +373,47 @@ test-simple: $(TESTDIR)/test-simple.sh
 	ERROR="require exactly 1" 	$(REVERSE) $<
 	$< pos -o 'uf ta' | grep -q 'OPT_S=uf ta,POS_S=pos,'
 	test -z "$(SHELLCHECK)" || $(SHELLCHECK) "$(TESTDIR)/test-simple.sh"
+test-simple: $(TESTDIR)/test-simple.sh
+	$< pos | grep -q 'OPT_S=x,POS_S=pos,'
+	$< -o 'uf ta' pos | grep -q 'OPT_S=uf ta,POS_S=pos,'
+	$< -h | grep -q 'END-$$'
+	$< -h | grep -q '^\s*-BEGIN'
+	$< -h | grep -q '^		-BEGIN'
+	$< -h | grep -q -v '^\s*-BEGIN2'
+	$< -h | grep -q -v 'END2-$$'
+	$< -h | grep -q '"line 2" END-\\n'
+	$< -h | grep -q '^		-PBEGIN'
+	$< -h | grep -q 'PEND-$$'
+	grep -q '^		esac' $<
+	grep -q '^			\*)' $<
+	ERROR=spurious 	$(REVERSE) $< -- one two
+	ERROR="last one was: 'two'" 	$(REVERSE) $< one two
+	ERROR="expect exactly 1" 	$(REVERSE) $< one two
+	ERROR="[Nn]ot enough" 	$(REVERSE) $<
+	ERROR="require exactly 1" 	$(REVERSE) $<
+	$< pos -o 'uf ta' --print-optionals | grep -q 'OPT_S=uf ta,POS_S=pos,_optionals=_arg_prefix _arg_print_optionals'
+	test -z "$(SHELLCHECK)" || $(SHELLCHECK) "$(TESTDIR)/test-simple.sh"
+test-simple: $(TESTDIR)/test-simple.sh
+	$< pos | grep -q 'OPT_S=x,POS_S=pos,'
+	$< -o 'uf ta' pos | grep -q 'OPT_S=uf ta,POS_S=pos,'
+	$< -h | grep -q 'END-$$'
+	$< -h | grep -q '^\s*-BEGIN'
+	$< -h | grep -q '^		-BEGIN'
+	$< -h | grep -q -v '^\s*-BEGIN2'
+	$< -h | grep -q -v 'END2-$$'
+	$< -h | grep -q '"line 2" END-\\n'
+	$< -h | grep -q '^		-PBEGIN'
+	$< -h | grep -q 'PEND-$$'
+	grep -q '^		esac' $<
+	grep -q '^			\*)' $<
+	ERROR=spurious 	$(REVERSE) $< -- one two
+	ERROR="last one was: 'two'" 	$(REVERSE) $< one two
+	ERROR="expect exactly 1" 	$(REVERSE) $< one two
+	ERROR="[Nn]ot enough" 	$(REVERSE) $<
+	ERROR="require exactly 1" 	$(REVERSE) $<
+	$< pos -o 'uf ta' --la x --print-optionals
+	$< pos -o 'uf ta' --la x --print-optionals | grep -q 'OPT_S=uf ta,POS_S=pos,LA=x,_optionals=_arg_prefix _arg_la _arg_print_optionals'
+	test -z "$(SHELLCHECK)" || $(SHELLCHECK) "$(TESTDIR)/test-simple.sh"
 test-simple-dash: $(TESTDIR)/test-simple-dash.sh
 	$< pos | grep -q 'OPT_S=x,POS_S=pos,'
 	$< -o 'uf ta' pos | grep -q 'OPT_S=uf ta,POS_S=pos,'

@@ -72,6 +72,7 @@ begins_with_short_option()
 _positionals=()
 _arg_input=
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_optionals=()
 _arg_output="-"
 _arg_in_place="off"
 _arg_type="bash-script"
@@ -114,20 +115,25 @@ parse_commandline()
 			-o|--output)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_output="$2"
+				_optionals+=(_arg_output)
 				shift
 				;;
 			--output=*)
 				_arg_output="${_key##--output=}"
+				_optionals+=(_arg_output)
 				;;
 			-o*)
 				_arg_output="${_key##-o}"
+				_optionals+=(_arg_output)
 				;;
 			-i|--no-in-place|--in-place)
 				_arg_in_place="on"
+				_optionals+=(_arg_in_place)
 				test "${1:0:5}" = "--no-" && _arg_in_place="off"
 				;;
 			-i*)
 				_arg_in_place="on"
+				_optionals+=(_arg_in_place)
 				_next="${_key##-i}"
 				if test -n "$_next" -a "$_next" != "$_key"
 				then
@@ -137,36 +143,45 @@ parse_commandline()
 			-t|--type)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_type="$(type "$2" "type")" || exit 1
+				_optionals+=(_arg_type)
 				shift
 				;;
 			--type=*)
 				_arg_type="$(type "${_key##--type=}" "type")" || exit 1
+				_optionals+=(_arg_type)
 				;;
 			-t*)
 				_arg_type="$(type "${_key##-t}" "type")" || exit 1
+				_optionals+=(_arg_type)
 				;;
 			--no-library|--library)
 				_arg_library="on"
+				_optionals+=(_arg_library)
 				test "${1:0:5}" = "--no-" && _arg_library="off"
 				;;
 			--strip)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_strip="$(content "$2" "strip")" || exit 1
+				_optionals+=(_arg_strip)
 				shift
 				;;
 			--strip=*)
 				_arg_strip="$(content "${_key##--strip=}" "strip")" || exit 1
+				_optionals+=(_arg_strip)
 				;;
 			--no-check-typos|--check-typos)
 				_arg_check_typos="on"
+				_optionals+=(_arg_check_typos)
 				test "${1:0:5}" = "--no-" && _arg_check_typos="off"
 				;;
 			-c|--no-commented|--commented)
 				_arg_commented="on"
+				_optionals+=(_arg_commented)
 				test "${1:0:5}" = "--no-" && _arg_commented="off"
 				;;
 			-c*)
 				_arg_commented="on"
+				_optionals+=(_arg_commented)
 				_next="${_key##-c}"
 				if test -n "$_next" -a "$_next" != "$_key"
 				then
@@ -176,21 +191,26 @@ parse_commandline()
 			-I|--search)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_search+=("$2")
+				_optionals+=(_arg_search)
 				shift
 				;;
 			--search=*)
 				_arg_search+=("${_key##--search=}")
+				_optionals+=(_arg_search)
 				;;
 			-I*)
 				_arg_search+=("${_key##-I}")
+				_optionals+=(_arg_search)
 				;;
 			--debug)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_debug="$2"
+				_optionals+=(_arg_debug)
 				shift
 				;;
 			--debug=*)
 				_arg_debug="${_key##--debug=}"
+				_optionals+=(_arg_debug)
 				;;
 			-h|--help)
 				print_help

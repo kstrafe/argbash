@@ -36,6 +36,7 @@ begins_with_short_option()
 _positionals=()
 _arg_input=('' )
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_optionals=()
 _arg_output=""
 
 
@@ -60,13 +61,16 @@ parse_commandline()
 			-o|--output)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
 				_arg_output="$2"
+				_optionals+=(_arg_output)
 				shift
 				;;
 			--output=*)
 				_arg_output="${_key##--output=}"
+				_optionals+=(_arg_output)
 				;;
 			-o*)
 				_arg_output="${_key##-o}"
+				_optionals+=(_arg_output)
 				;;
 			-v|--version)
 				echo "argbash-1to2 v$version"
