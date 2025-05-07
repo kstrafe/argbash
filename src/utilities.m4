@@ -340,3 +340,15 @@ m4_define([UNDERLINE], [m4_do(
 	[m4_if(m4_len([$1]), 0, ,
 		[m4_for(idx, 1, m4_len([$1]), 1, [$2])])],
 )])
+
+
+dnl
+dnl $1: Subset
+dnl $2: Superset
+dnl $3: Element binding
+dnl $4: If subset element contained in superset
+dnl $5: If subset element not contained in superset
+m4_define([IS_SUBSET_OF], [m4_do(
+	[m4_set_foreach([$1], [$3],
+		[m4_set_contains([$2], $3, [$4], [$5])])],
+)])
